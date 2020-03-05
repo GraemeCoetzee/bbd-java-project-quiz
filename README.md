@@ -1,1 +1,1 @@
-# bbd-java-project-quiz
+# bbd-grad-quiz
