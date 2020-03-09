@@ -1,0 +1,67 @@
+package com.bbdgrad.javaquiz.model;
+
+public class Session {
+    private Number roomID;
+    private String mode;
+    private Boolean host;
+    private Boolean join;
+    private String sessionID;
+  
+    public Session() {
+    }
+  
+    public Session(Number roomID, String mode, Boolean host, Boolean join) {
+      this.roomID = roomID;
+      this.mode = mode;
+      this.host = host;
+      this.join = join;
+    }
+
+    public Session(Session session) {
+        this.roomID = session.roomID;
+        this.mode = session.mode;
+        this.host = session.host;
+        this.join = session.join;
+        this.sessionID = session.sessionID;
+    }
+  
+    public Number getRoomID() {
+      return roomID;
+    }
+
+    public String getMode() {
+        return this.mode;
+    }
+
+    public Boolean getHost() {
+        return this.host;
+    }
+
+    public Boolean getJoin() {
+        return this.join;
+    }
+
+    public String getSessionID() {
+        return this.sessionID;
+    }
+
+    public void setRoom(Number room) {
+        this.roomID = room;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
+    public void setHost(Boolean host) {
+        this.host = host;
+    }
+
+    public void setJoin(Boolean join) {
+        this.join = join;
+    }
+
+    public void setSessionID(String id) {
+        this.sessionID = id;
+    }
+}

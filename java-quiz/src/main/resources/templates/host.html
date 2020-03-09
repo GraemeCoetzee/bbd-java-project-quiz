@@ -1,4 +1,17 @@
 <!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>waiting for players</div>
+    <button>start</button>
+</body>
+</html> -->
+
+<!DOCTYPE html>
 <html>
 <head>
     <title>Hello WebSocket</title>
@@ -7,15 +20,18 @@
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-    <script src="/app.js"></script>
+    <script src="/host.js"></script>
 </head>
 <body>
+    Waiting for players:
+    <button>start</button>
 <noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
     enabled. Please enable
     Javascript and reload this page!</h2></noscript>
 <div id="main-content" class="container">
-    <div class="row">
-        <div class="col-md-6">
+    <div id="roomID"></div>
+    <!-- <div class="row"> -->
+        <!-- <div class="col-md-6">
             <form class="form-inline">
                 <div class="form-group">
                     <label for="connect">WebSocket connection:</label>
@@ -24,8 +40,8 @@
                     </button>
                 </div>
             </form>
-        </div>
-        <div class="col-md-6">
+        </div> -->
+        <!-- <div class="col-md-6">
             <form class="form-inline">
                 <div class="form-group">
                     <label for="name">What is your name?</label>
@@ -33,14 +49,14 @@
                 </div>
                 <button id="send" class="btn btn-default" type="submit">Send</button>
             </form>
-        </div>
-    </div>
+        </div> -->
+    <!-- </div> -->
     <div class="row">
         <div class="col-md-12">
             <table id="conversation" class="table table-striped">
                 <thead>
                 <tr>
-                    <th>Greetings</th>
+                    <th>Players</th>
                 </tr>
                 </thead>
                 <tbody id="greetings">
@@ -49,18 +65,5 @@
         </div>
     </div>
 </div>
-</body>
-</html> -->
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mode</title>
-</head>
-<body>
-    <button><a href="/singleplayer">Single Player</a></button>
-    <button><a href="/multiplayer">Multiplayer</a></button>
 </body>
 </html>
