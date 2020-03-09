@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 
 import java.util.*;
 import com.bbdgrad.javaquiz.model.Session;
+import com.bbdgrad.javaquiz.model.Quiz;
+import com.bbdgrad.javaquiz.model.Room;
 
 @Controller
 public class RoomController {
@@ -59,5 +61,16 @@ public class RoomController {
     }
 
     return valid;
+  }
+
+  @MessageMapping("/quiz/quizbegin/{room}")
+  @SendTo("/topic/quiz/quizbegin/{room}")
+  public Quiz returnQuiz(Room r) {
+
+    System.out.println(r.getRoomID());
+
+    Quiz newQuiz = new Quiz();
+    newQuiz.setRoomID(r.getRoomID());
+    return newQuiz;
   }
 }

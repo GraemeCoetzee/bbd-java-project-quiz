@@ -1,13 +1,13 @@
 package com.bbdgrad.javaquiz.model;
 
-class Quiz {
+public class Quiz {
     private int numberOfQuestions;
     private String questions[];
     private String correctAnswers[];
     private String wrongAnswers[][];
     private Number roomID;
 
-    Quiz() {
+    public Quiz() {
         this.numberOfQuestions = 0;
         this.questions = new String[0];
         this.correctAnswers = new String[0];
@@ -15,7 +15,7 @@ class Quiz {
         this.roomID = 0;
     }
 
-    Quiz(Quiz quiz) {
+    public Quiz(Quiz quiz) {
         this.numberOfQuestions = quiz.numberOfQuestions;
         this.questions = quiz.questions;
         this.correctAnswers = quiz.correctAnswers;
@@ -23,27 +23,39 @@ class Quiz {
         this.roomID = quiz.roomID;
     }
 
-    String getQuestion(int index) {
+    public int getNumberOfQuestions() {
+        return numberOfQuestions;
+    }
+
+    public String getQuestion(int index) {
         return this.questions[index];
     }
 
-    String getCorrectAnswer(int index) {
+    public String getCorrectAnswer(int index) {
         return this.correctAnswers[index];
     }
 
-    String[] getWrongAnswer(int index) {
+    public String[] getWrongAnswer(int index) {
         return this.wrongAnswers[index];
     }
 
-    String[] getQuestions() {
+    public String[] getQuestions() {
         return this.questions;
     }
 
-    String[] getCorrectAnswers() {
+    public String[] getCorrectAnswers() {
         return this.correctAnswers;
     }
 
-    String[][] getWrongAnswers() {
+    public String[][] getWrongAnswers() {
         return this.wrongAnswers;
+    }
+
+    public void setRoomID(Number roomID) {
+        this.roomID = roomID;
+    }
+
+    public Number getRoomID() {
+        return roomID;
     }
 }

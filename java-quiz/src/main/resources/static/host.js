@@ -2,6 +2,7 @@ var stompClient = null;
 var interval = null;
 let rID = null;
 let sID = null;
+let quiz = null;
 
 function connect(roomID) {
     let socket = new SockJS('/gs-guide-websocket');
@@ -15,11 +16,15 @@ function connect(roomID) {
             showGreeting(JSON.parse(sessions.body));
         });
 
-        stompClient.subscribe(`/topic/quiz/questions${roomID}`, function (response) {
+        stompClient.subscribe(`/topic/quiz/quizbegin/${roomID}`, function (response) {
+            handleStartQuizRepsonse(JSON.parse(response.body));
+        });
+
+        stompClient.subscribe(`/topic/quiz/questions/${roomID}`, function (response) {
             handleResponse(JSON.parse(response.body));
         });
 
-        stompClient.subscribe(`/topic/quiz/answers${roomID}`, function (response) {
+        stompClient.subscribe(`/topic/quiz/answers/${roomID}`, function (response) {
             handleResponse(JSON.parse(response.body));
         });
 
@@ -49,6 +54,15 @@ function sendName(roomID, message) {
     stompClient.send(`/app/quiz/${roomID}`, {}, message);
 }
 
+function startQuiz() {
+
+    let room = JSON.stringify({
+        roomID: rID
+    });
+
+    stompClient.send(`/app/quiz/quizbegin/${rID}`, {}, room);
+}
+
 function startPolling(roomID) {
 
     let room = JSON.stringify({
@@ -76,6 +90,10 @@ function showGreeting(message) {
         if(!element.host)
         $("#greetings").append("<tr><td>" + element.sessionID +" joined" + "</td></tr>");
     });
+}
+
+function handleStartQuizRepsonse(message) {
+    console.log(message);
 }
 
 $(function () {
