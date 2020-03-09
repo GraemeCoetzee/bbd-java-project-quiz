@@ -10,21 +10,18 @@ function connect(roomID) {
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         let socketId = /\/([^\/]+)\/websocket/.exec(socket._transport.url)[1];
-        $.ajax({
-            type: "POST",
-            url: "/multiplayer/joinsession",
-            data: JSON.stringify({
-                roomID: roomID,
-                mode: 'multiplayer',
-                host: false
-            }),
-            contentType : "application/json",
-            dataType: 'json'
+
+        stompClient.subscribe(`/topic/quiz/${roomID}`, function (response) {
+            handleResponse(JSON.parse(response.body));
         });
 
-        // stompClient.subscribe(`/topic/quiz/${roomID}`, function (greeting) {
-        //     showGreeting(JSON.parse(greeting.body).content);
-        // });
+        stompClient.subscribe(`/topic/quiz/questions${roomID}`, function (response) {
+            handleResponse(JSON.parse(response.body));
+        });
+
+        stompClient.subscribe(`/topic/quiz/answers${roomID}`, function (response) {
+            handleResponse(JSON.parse(response.body));
+        });
 
         sendName(roomID, JSON.stringify({
             roomID: roomID,
@@ -34,6 +31,16 @@ function connect(roomID) {
             sessionID: socketId
         }));
     });
+}
+
+function handleResponse(response) {
+    if(response.length == 1 && response[0].join == false) {
+        alert('room does not exist');
+        disconnect();
+    } else {
+        $("#joinForm").hide();
+        $("#waiting").show();
+    }
 }
 
 function disconnect() {

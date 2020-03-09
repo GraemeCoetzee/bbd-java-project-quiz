@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @Controller
 public class QuizController {
-	private Session session;
-
 	@GetMapping("/home")
 	public String home(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
 		model.addAttribute("name", name);
@@ -77,7 +75,6 @@ public class QuizController {
 
 	@PostMapping("/singleplayer/createsession") 
 	public String hostSingleplayer(@RequestBody Session session) {
-		this.session = session;
 		return "host";
 	}
 

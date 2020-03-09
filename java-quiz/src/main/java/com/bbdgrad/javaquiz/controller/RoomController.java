@@ -19,23 +19,45 @@ public class RoomController {
   @MessageMapping("/quiz/{room}")
   @SendTo("/topic/quiz/{room}")
   public List<Session> addSession(Session session) {
-    Boolean add = false;
-    for(int i = 0; i < sessions.size(); i++) {
-      if(sessions.get(i).getHost() && sessions.get(i).getMode().equals(session.getMode()) && sessions.get(i).getRoomID().equals(session.getRoomID())) {
-        add = true;
+    if(session.getJoin()) {
+      if(!testValidRoom(session) && !session.getHost()) {
+        Session s = new Session(session);
+        List<Session> errorSession = new ArrayList<Session>();
+        s.setJoin(false);
+        errorSession.add(s);
+        return errorSession;
       }
+
+      Boolean add = false;
+      for(int i = 0; i < sessions.size(); i++) {
+        if(sessions.get(i).getHost() && sessions.get(i).getMode().equals(session.getMode()) && sessions.get(i).getRoomID().equals(session.getRoomID())) {
+          add = true;
+        }
+      }
+
+      if(session.getHost() || add)
+        sessions.add(session);
     }
-
-    if(session.getHost() || add)
-      sessions.add(session);
-
+    
     List<Session> roomSessions = new ArrayList<Session>();
     for(int i = 0; i < sessions.size(); i++) {
       if(sessions.get(i).getRoomID().equals(session.getRoomID())) {
         roomSessions.add(sessions.get(i));
       }
     }
-    
+
     return roomSessions;
+  }
+
+  Boolean testValidRoom(Session session) {
+    Boolean valid = false;
+    for(int i = 0; i < sessions.size(); i++) {
+      if(sessions.get(i).getHost() && sessions.get(i).getRoomID().equals(session.getRoomID())) {
+        valid = true;
+        break;
+      }
+    }
+
+    return valid;
   }
 }

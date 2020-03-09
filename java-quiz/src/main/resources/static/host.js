@@ -1,23 +1,13 @@
 var stompClient = null;
+var interval = null;
+let rID = null;
+let sID = null;
 
 function connect(roomID) {
     let socket = new SockJS('/gs-guide-websocket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         let socketId = /\/([^\/]+)\/websocket/.exec(socket._transport.url)[1];
-        $.ajax({
-            type: "POST",
-            url: "/multiplayer/createsession",
-            data: JSON.stringify({
-                roomID: roomID,
-                mode: 'multiplayer',
-                host: true,
-                join: true,
-                socketID: socketId
-            }),
-            contentType : "application/json",
-            dataType: 'json'
-        });
 
         $("#roomID").html(roomID);
 
@@ -25,13 +15,26 @@ function connect(roomID) {
             showGreeting(JSON.parse(sessions.body));
         });
 
-        sendName(roomID, JSON.stringify({
+        stompClient.subscribe(`/topic/quiz/questions${roomID}`, function (response) {
+            handleResponse(JSON.parse(response.body));
+        });
+
+        stompClient.subscribe(`/topic/quiz/answers${roomID}`, function (response) {
+            handleResponse(JSON.parse(response.body));
+        });
+
+        rID = roomID;
+        sID = socketId;
+
+        let room = JSON.stringify({
             roomID: roomID,
             mode: 'multiplayer',
             host: true,
             join: true,
             sessionID: socketId
-        }));
+        })
+        sendName(roomID, room);
+        startPolling(roomID, socketId);
     });
 }
 
@@ -44,6 +47,26 @@ function disconnect() {
 
 function sendName(roomID, message) {
     stompClient.send(`/app/quiz/${roomID}`, {}, message);
+}
+
+function startPolling(roomID) {
+
+    let room = JSON.stringify({
+        roomID: roomID,
+        mode: 'multiplayer',
+        host: true,
+        join: false,
+        sessionID: 0
+    })
+
+
+    interval = setInterval(() => { 
+        stompClient.send(`/app/quiz/${roomID}`, {}, room);
+    }, 3000);
+}
+
+function stopPolling() {
+    // window.clearInterval(interval);
 }
 
 function showGreeting(message) {
