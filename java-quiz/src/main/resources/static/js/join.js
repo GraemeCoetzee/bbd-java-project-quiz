@@ -1,5 +1,13 @@
 var stompClient = null;
 
+
+
+$( document ).ready(function() {
+    $("#question").hide();
+    $("#possibleAnswers").hide();
+    $("#results").hide();
+});
+
 function join() {
     let roomID = $("#roomID").val();
     connect(roomID);
@@ -40,7 +48,24 @@ function handleResponse(response) {
 }
 
 function handleQuestion(question) {
-    console.log(question);
+    setTimeout(()=> {
+        $("#question").show();
+    }, 1000);
+
+    setTimeout(()=> {
+        $("#possibleAnswers").show();
+    }, 15000);
+
+    setTimeout(()=> {
+        $("#results").show();
+    }, 30000);
+
+    setTimeout(()=> {
+        $("#question").hide();
+        $("#possibleAnswers").hide();
+        $("#results").hide();
+    }, 40000);
+
 }
 
 function disconnect() {

@@ -10,7 +10,7 @@ function connect(roomID) {
     stompClient.connect({}, function (frame) {
         let socketId = /\/([^\/]+)\/websocket/.exec(socket._transport.url)[1];
 
-        $("#roomID").html(roomID);
+        $("#roomID").html("Game Pin: " + roomID);
 
         stompClient.subscribe(`/topic/quiz/${roomID}`, function (sessions) {
             showGreeting(JSON.parse(sessions.body));
@@ -80,11 +80,11 @@ function stopPolling() {
 }
 
 function showGreeting(message) {
-    $("#greetings").html("");
+    $("#players").html("");
     console.log(message);
     message.forEach(element => {
         if(!element.host)
-        $("#greetings").append("<tr><td>" + element.sessionID +" joined" + "</td></tr>");
+        $("#players").append("<div class='card col-md-4'><div class='card-body'>" + element.sessionID + "</div></div>");
     });
 }
 
@@ -94,13 +94,17 @@ function handleStartQuizRepsonse(message) {
 }
 
 function begin(quiz) {
-    for(let i = 0; i <quiz.numberOfQuestions; i++) {
-        let question = JSON.stringify({
-            question: quiz.questions[i],
-            possibleAnswers: quiz.correctAnswers[i].concat(quiz.wrongAnswers[i])
-        });
-
-        stompClient.send(`/app/quiz/questions/${rID}`, {}, question);
+    for(var j = 0; j < quiz.questions.length; j++) {
+        function send(i) {
+            setTimeout(() => {
+                let question = JSON.stringify({
+                    question: quiz.questions[i],
+                    possibleAnswers: quiz.correctAnswers[i].concat(quiz.wrongAnswers[i])
+                });
+                stompClient.send(`/app/quiz/questions/${rID}`, {}, question);
+            }, i * 40000);
+        }
+        send(j);
     }
 }
 
@@ -121,7 +125,7 @@ $(function () {
         e.preventDefault();
     });
 
-    let roomID = Math.floor((Math.random() * 10000000000) + 1);
+    let roomID = Math.floor((Math.random() * 1000000) + 1);
     connect(roomID);
 
     $( "#disconnect" ).click(function() { disconnect(); });

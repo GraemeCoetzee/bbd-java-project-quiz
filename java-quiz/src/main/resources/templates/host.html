@@ -1,69 +1,60 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <div>waiting for players</div>
-    <button>start</button>
-</body>
-</html> -->
-
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Hello WebSocket</title>
+    <title>Quizzical</title>
+
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/main.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
     <script src="/js/host.js"></script>
 </head>
+
 <body>
-    Waiting for players:
-    <button onclick="startQuiz()">start</button>
-<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
-    enabled. Please enable
-    Javascript and reload this page!</h2></noscript>
-<div id="main-content" class="container">
-    <div id="roomID"></div>
-    <!-- <div class="row"> -->
-        <!-- <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="connect">WebSocket connection:</label>
-                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
-                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
-                    </button>
+    <!-- <button onclick="startQuiz()">start</button> -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="container  mt-5">
+                    <div class="row">
+                        <div class="col-md-12 col-12 mx-auto">
+                            <div class="center">
+                                <h3 spellcheck="false">Quizzical</h3>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </form>
-        </div> -->
-        <!-- <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="name">What is your name?</label>
-                    <input type="text" id="name" class="form-control" placeholder="Your name here...">
+            </div>
+
+            <div class="col-12 text-light game-pin mt-3">
+                <div class="row" >
+                    <div class="col-auto mx-auto" id="roomID">
+
+                    </div>
                 </div>
-                <button id="send" class="btn btn-default" type="submit">Send</button>
-            </form>
-        </div> -->
-    <!-- </div> -->
-    <div class="row">
-        <div class="col-md-12">
-            <table id="conversation" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Players</th>
-                </tr>
-                </thead>
-                <tbody id="greetings">
-                </tbody>
-            </table>
+            </div>
+
+            <div class="col-12 text-light mt-3">
+                <div class="row" >
+                    <div class="col-auto mx-auto">
+                        <button class="btn form-control" onclick="startQuiz()">Start</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-12 mt-5 shadow-lg mb-4">
+                <div class="container-fluid content">
+                    <div class="row shadow-lg p-3 " id="players">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+    <script src=" https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
 </body>
+
 </html>

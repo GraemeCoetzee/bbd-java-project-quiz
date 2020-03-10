@@ -1,66 +1,49 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
+
 <head>
-    <title>Hello WebSocket</title>
+    <title>Quizzical</title>
+
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/main.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-    <script src="/app.js"></script>
 </head>
-<body>
-<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
-    enabled. Please enable
-    Javascript and reload this page!</h2></noscript>
-<div id="main-content" class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="connect">WebSocket connection:</label>
-                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
-                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
-                    </button>
-                </div>
-            </form>
-        </div>
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="name">What is your name?</label>
-                    <input type="text" id="name" class="form-control" placeholder="Your name here...">
-                </div>
-                <button id="send" class="btn btn-default" type="submit">Send</button>
-            </form>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <table id="conversation" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Greetings</th>
-                </tr>
-                </thead>
-                <tbody id="greetings">
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-</body>
-</html> -->
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mode</title>
-</head>
 <body>
-    <button><a href="/singleplayer">Single Player</a></button>
-    <button><a href="/multiplayer">Multiplayer</a></button>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="container  mt-5">
+                    <div class="row">
+                        <div class="col-md-12 col-12 mx-auto">
+                            <div class="center">
+                                <h3 spellcheck="false">Quizzical</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-6 mx-auto center">
+                    <a href="/singleplayer" class="btn btn-primary btn-lg active" role="button"
+                        aria-pressed="true">Single
+                        Player</a>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-6 mx-auto center">
+                    <a href="/multiplayer" class="btn btn-primary btn-lg active" role="button"
+                        aria-pressed="true">Multiplayer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 </body>
+
 </html>

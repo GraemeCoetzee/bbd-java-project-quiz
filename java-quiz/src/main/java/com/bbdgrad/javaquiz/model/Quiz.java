@@ -1,9 +1,8 @@
 package com.bbdgrad.javaquiz.model;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter
 public class Quiz {
     private int numberOfQuestions;
     private String questions[];

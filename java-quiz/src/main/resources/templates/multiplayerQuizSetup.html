@@ -1,12 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Quizzical</title>
+
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
 </head>
+
 <body>
-    <button>Categories</button>
-    <button><a href="/multiplayer/host">Create Session</a></button>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="container  mt-5">
+                    <div class="row">
+                        <div class="col-md-12 col-12 mx-auto">
+                            <div class="center">
+                                <h3 spellcheck="false">Quizzical</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-6 mx-auto center">
+                    <input class="form-control" required type="number" id="quantity" placeholder="Number of questions"
+                        name="Number of questions" min="1" max="50">
+                    <select name="trivia_category" class="form-control">
+                        <option value="any">Any Category</option>
+                        <option value="9">General Knowledge</option>
+                        <option value="10">Entertainment: Books</option>
+                        <option value="11">Entertainment: Film</option>
+                        <option value="12">Entertainment: Music</option>
+                        <option value="13">Entertainment: Musicals &amp; Theatres</option>
+                        <option value="14">Entertainment: Television</option>
+                        <option value="15">Entertainment: Video Games</option>
+                        <option value="16">Entertainment: Board Games</option>
+                        <option value="17">Science &amp; Nature</option>
+                        <option value="18">Science: Computers</option>
+                        <option value="19">Science: Mathematics</option>
+                        <option value="20">Mythology</option>
+                        <option value="21">Sports</option>
+                        <option value="22">Geography</option>
+                        <option value="23">History</option>
+                        <option value="24">Politics</option>
+                        <option value="25">Art</option>
+                        <option value="26">Celebrities</option>
+                        <option value="27">Animals</option>
+                        <option value="28">Vehicles</option>
+                        <option value="29">Entertainment: Comics</option>
+                        <option value="30">Science: Gadgets</option>
+                        <option value="31">Entertainment: Japanese Anime &amp; Manga</option>
+                        <option value="32">Entertainment: Cartoon &amp; Animations</option>
+                    </select>
+                    <select name="trivia_difficulty" class="form-control">
+                        <option value="any">Any Difficulty</option>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                    <select name="trivia_type" class="form-control">
+                        <option value="any">Any Type</option>
+                        <option value="multiple">Multiple Choice</option>
+                        <option value="boolean">True / False</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-6 mx-auto center">
+                    <a href="/multiplayer/host" class="btn btn-primary btn-lg active" role="button"
+                        aria-pressed="true">Create Session</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 </body>
+
 </html>

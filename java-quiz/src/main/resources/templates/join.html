@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -22,5 +22,71 @@
     <div id="waiting">
         waiting...
     </div>
+
+    <div id="question">
+        question
+    </div>
+
+    <div id="possibleAnswers">
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>4</button>
+    </div>
+
+    <div id="results">
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>4</button>
+    </div>
 </body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Quizzical</title>
+
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/js/join.js"></script>
+</head>
+
+<body>
+    <!-- <button onclick="startQuiz()">start</button> -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="container  mt-5">
+                    <div class="row">
+                        <div class="col-md-12 col-12 mx-auto">
+                            <div class="center">
+                                <h3 spellcheck="false">Quizzical</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 text-light game-pin mt-3">
+                <div class="row" >
+                    <div class="col-auto mx-auto">
+                        <div id="joinForm">
+                            <input class="form-control" placeholder="Game Pin" id="roomID">
+                            <button class="form-control" onclick="join()">Join</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+    <script src=" https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+</body>
+
 </html>
