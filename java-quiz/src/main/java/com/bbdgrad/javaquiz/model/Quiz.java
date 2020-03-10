@@ -1,16 +1,20 @@
 package com.bbdgrad.javaquiz.model;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter @Setter @NoArgsConstructor
 public class Quiz {
     private int numberOfQuestions;
     private String questions[];
-    private String correctAnswers[];
+    private String correctAnswers[][];
     private String wrongAnswers[][];
     private Number roomID;
 
     public Quiz() {
         this.numberOfQuestions = 0;
         this.questions = new String[0];
-        this.correctAnswers = new String[0];
+        this.correctAnswers = new String[0][0];
         this.wrongAnswers = new String[0][0];
         this.roomID = 0;
     }
@@ -32,7 +36,7 @@ public class Quiz {
     }
 
     public String getCorrectAnswer(int index) {
-        return this.correctAnswers[index];
+        return this.correctAnswers[index][0];
     }
 
     public String[] getWrongAnswer(int index) {
@@ -43,7 +47,7 @@ public class Quiz {
         return this.questions;
     }
 
-    public String[] getCorrectAnswers() {
+    public String[][] getCorrectAnswers() {
         return this.correctAnswers;
     }
 
@@ -57,5 +61,21 @@ public class Quiz {
 
     public Number getRoomID() {
         return roomID;
+    }
+
+    public void setQuestions(String[] questions) {
+        this.questions = questions;
+    }
+
+    public void setAnswers(String[][] answers) {
+        this.correctAnswers = answers;
+    }
+
+    public void setWrongAnswers(String[][] wrong) {
+        this.wrongAnswers = wrong;
+    }
+
+    public void setNumberOfQuestions(int noOfQ) {
+        this.numberOfQuestions = noOfQ;
     }
 }

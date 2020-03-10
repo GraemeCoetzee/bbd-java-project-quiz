@@ -20,10 +20,6 @@ function connect(roomID) {
             handleStartQuizRepsonse(JSON.parse(response.body));
         });
 
-        stompClient.subscribe(`/topic/quiz/questions/${roomID}`, function (response) {
-            handleResponse(JSON.parse(response.body));
-        });
-
         stompClient.subscribe(`/topic/quiz/answers/${roomID}`, function (response) {
             handleResponse(JSON.parse(response.body));
         });
@@ -93,6 +89,30 @@ function showGreeting(message) {
 }
 
 function handleStartQuizRepsonse(message) {
+    console.log(message);
+    begin(message);
+}
+
+function begin(quiz) {
+    for(let i = 0; i <quiz.numberOfQuestions; i++) {
+        let question = JSON.stringify({
+            question: quiz.questions[i],
+            possibleAnswers: quiz.correctAnswers[i].concat(quiz.wrongAnswers[i])
+        });
+
+        stompClient.send(`/app/quiz/questions/${rID}`, {}, question);
+    }
+}
+
+function sendQuestion() {
+
+}
+
+function updateScore() {
+
+}
+
+function handleAnsweredQuestionResponse(message) {
     console.log(message);
 }
 

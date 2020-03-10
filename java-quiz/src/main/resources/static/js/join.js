@@ -15,12 +15,8 @@ function connect(roomID) {
             handleResponse(JSON.parse(response.body));
         });
 
-        stompClient.subscribe(`/topic/quiz/questions${roomID}`, function (response) {
-            handleResponse(JSON.parse(response.body));
-        });
-
-        stompClient.subscribe(`/topic/quiz/answers${roomID}`, function (response) {
-            handleResponse(JSON.parse(response.body));
+        stompClient.subscribe(`/topic/quiz/questions/${roomID}`, function (response) {
+            handleQuestion(JSON.parse(response.body));
         });
 
         sendName(roomID, JSON.stringify({
@@ -41,6 +37,10 @@ function handleResponse(response) {
         $("#joinForm").hide();
         $("#waiting").show();
     }
+}
+
+function handleQuestion(question) {
+    console.log(question);
 }
 
 function disconnect() {

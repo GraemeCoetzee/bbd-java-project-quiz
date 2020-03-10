@@ -6,6 +6,7 @@ public class Session {
     private Boolean host;
     private Boolean join;
     private String sessionID;
+    private int score;
   
     public Session() {
     }
@@ -23,6 +24,7 @@ public class Session {
         this.host = session.host;
         this.join = session.join;
         this.sessionID = session.sessionID;
+        this.score = session.score;
     }
   
     public Number getRoomID() {
@@ -45,6 +47,10 @@ public class Session {
         return this.sessionID;
     }
 
+    public int getScore() {
+        return this.score;
+    }
+
     public void setRoom(Number room) {
         this.roomID = room;
     }
@@ -63,5 +69,9 @@ public class Session {
 
     public void setSessionID(String id) {
         this.sessionID = id;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }

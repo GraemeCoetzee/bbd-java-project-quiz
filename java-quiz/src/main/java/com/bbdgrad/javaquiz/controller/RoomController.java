@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 
 import java.util.*;
 import com.bbdgrad.javaquiz.model.Session;
+import com.bbdgrad.javaquiz.model.Answer;
+import com.bbdgrad.javaquiz.model.Question;
 import com.bbdgrad.javaquiz.model.Quiz;
 import com.bbdgrad.javaquiz.model.Room;
 
@@ -71,6 +73,37 @@ public class RoomController {
 
     Quiz newQuiz = new Quiz();
     newQuiz.setRoomID(r.getRoomID());
+
+    String[] questions = {"what?","where", "why"};
+    newQuiz.setQuestions(questions);
+
+    newQuiz.setNumberOfQuestions(3);
+
+    String[][] answers = {{"this"},{"there"},{"because"}};
+    newQuiz.setAnswers(answers);
+
+    String[][] wrong = {{"donno1", "donno2", "donno3"}, {"donno1", "donno2", "donno3"}, {"donno1", "donno2", "donno3"}};
+    newQuiz.setWrongAnswers(wrong);
+
+    newQuiz.setRoomID(r.getRoomID());
     return newQuiz;
+  }
+
+  @MessageMapping("/quiz/questions/{room}")
+  @SendTo("/topic/quiz/questions/{room}")
+  public Question sendQuestion(Question ques) {
+    return ques;
+  }
+
+  @MessageMapping("/quiz/answer/{room}")
+  @SendTo("/topic/quiz/answer/{room}")
+  public Answer sendAnswer(Answer ans) {
+    return ans;
+  }
+
+  @MessageMapping("/quiz/score/{room}")
+  @SendTo("/topic/quiz/score/{room}")
+  public List<Session> updateScore(Session session) {
+    return sessions;
   }
 }
