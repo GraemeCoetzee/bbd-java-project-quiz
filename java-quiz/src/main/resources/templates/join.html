@@ -1,48 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
-    <title>Hello WebSocket</title>
-    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/main.css" rel="stylesheet">
-    <script src="/webjars/jquery/jquery.min.js"></script>
-    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-    <script src="/js/join.js"></script>
-</head>
-<body>
-    <div id="joinForm">
-        <input id="roomID">
-        <button onclick="join()">Join</button>
-    </div>
-
-    <div id="waiting">
-        waiting...
-    </div>
-
-    <div id="question">
-        question
-    </div>
-
-    <div id="possibleAnswers">
-        <button>1</button>
-        <button>2</button>
-        <button>3</button>
-        <button>4</button>
-    </div>
-
-    <div id="results">
-        <button>1</button>
-        <button>2</button>
-        <button>3</button>
-        <button>4</button>
-    </div>
-</body>
-</html> -->
-
 <!DOCTYPE html>
 <html>
 
@@ -73,8 +28,8 @@
                 </div>
             </div>
 
-            <div class="col-12 text-light game-pin mt-3">
-                <div class="row" >
+            <div class="col-12 text-light game-pin mt-1">
+                <div class="row">
                     <div class="col-auto mx-auto">
                         <div id="joinForm">
                             <input class="form-control" placeholder="Game Pin" id="roomID">
@@ -83,6 +38,46 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-12 text-light mt-1" id="loader">
+                <div class="row">
+                    <div class="col-auto mx-auto center">
+                        <div class="loader-text">Waiting for host ...</div>
+                        <div class="spinner-border text-dark center"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 mt-1 timer-description">
+                <div class="center" id="description">
+                    Think About It!!
+                </div>
+            </div>
+
+            <div class="col-12 mt-1" id="timer">
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                        aria-valuemax="100" style="width:70%">
+                        <span class="sr-only">70% Complete</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-12 mt-5 center mb-4" id="question">
+                <div class="container-fluid content center shadow-lg rounded">
+                    <div class="p-3 center" id="questionSpace">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 center answers" id="possibleAnswers">
+                <div class="row center answerSpace">
+                    dd
+                </div>
+            </div>
+
         </div>
     </div>
     <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>

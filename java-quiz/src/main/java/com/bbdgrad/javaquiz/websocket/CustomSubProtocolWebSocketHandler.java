@@ -58,6 +58,22 @@ public class CustomSubProtocolWebSocketHandler extends SubProtocolWebSocketHandl
             }
         }
 
+        List<String> toBeRemoved = new ArrayList<String>();
+
+        for(int i = 0; i < RoomController.sessions.size(); i++ ) {
+            if(RoomController.sessions.get(i).getSessionID().equals(session.getId())) {
+                if(RoomController.sessions.get(i).getHost()) {
+                    for(int j = 0; j < RoomController.sessions.size(); j++ ) {
+                        if(RoomController.sessions.get(j).getRoomID().equals(RoomController.sessions.get(i).getRoomID())) {
+                            toBeRemoved.add(RoomController.sessions.get(j).getSessionID());
+                        }
+                    }
+                } 
+            }
+        }
+
+        sessionHandler.closeSession(toBeRemoved);
+
         RoomController.sessions = new ArrayList<Session>();
         RoomController.sessions = tobeAdded;
     }

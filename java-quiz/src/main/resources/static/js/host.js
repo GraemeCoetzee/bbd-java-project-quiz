@@ -4,6 +4,8 @@ let rID = null;
 let sID = null;
 let quiz = null;
 
+let answers = [];
+
 function connect(roomID) {
     let socket = new SockJS('/gs-guide-websocket');
     stompClient = Stomp.over(socket);
@@ -21,7 +23,7 @@ function connect(roomID) {
         });
 
         stompClient.subscribe(`/topic/quiz/answers/${roomID}`, function (response) {
-            handleResponse(JSON.parse(response.body));
+            handleAnsweredQuestionResponse(JSON.parse(response.body));
         });
 
         rID = roomID;
@@ -49,6 +51,11 @@ function disconnect() {
 function sendName(roomID, message) {
     stompClient.send(`/app/quiz/${roomID}`, {}, message);
 }
+
+function handleAnswer(answer) {
+    console.log(answer);
+}
+
 
 function startQuiz() {
 
@@ -89,12 +96,12 @@ function showGreeting(message) {
 }
 
 function handleStartQuizRepsonse(message) {
-    console.log(message);
     begin(message);
 }
 
 function begin(quiz) {
     for(var j = 0; j < quiz.questions.length; j++) {
+        answers = [];
         function send(i) {
             setTimeout(() => {
                 let question = JSON.stringify({
@@ -103,8 +110,10 @@ function begin(quiz) {
                 });
                 stompClient.send(`/app/quiz/questions/${rID}`, {}, question);
             }, i * 40000);
+            console.log("--------------------------------------" + answers);
         }
         send(j);
+        
     }
 }
 
@@ -116,8 +125,8 @@ function updateScore() {
 
 }
 
-function handleAnsweredQuestionResponse(message) {
-    console.log(message);
+function handleAnsweredQuestionResponse(answer) {
+    answers.push(answer);
 }
 
 $(function () {

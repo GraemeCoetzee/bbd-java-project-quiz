@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -38,6 +40,19 @@ public class SessionHandler {
 
     public void register(WebSocketSession session) {
         sessionMap.put(session.getId(), session);
+    }
+
+    public void closeSession(List<String> sessions) {
+        try {
+            for(int i = 0; i < sessions.size(); i++) {
+                sessionMap.get(sessions.get(i)).close();
+                sessionMap.remove(sessions.get(i));
+                System.out.println("socket closed ---");
+            }
+        }
+        catch(IOException e) {
+            
+        }
     }
 
 }

@@ -95,8 +95,8 @@ public class RoomController {
     return ques;
   }
 
-  @MessageMapping("/quiz/answer/{room}")
-  @SendTo("/topic/quiz/answer/{room}")
+  @MessageMapping("/quiz/answers/{room}")
+  @SendTo("/topic/quiz/answers/{room}")
   public Answer sendAnswer(Answer ans) {
     return ans;
   }

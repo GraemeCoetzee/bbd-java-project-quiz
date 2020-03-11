@@ -25,7 +25,7 @@ public class Question {
         return this.question;
     }
 
-    public String[] getPosssibleAnswers() {
+    public String[] getPossibleAnswers() {
         return this.possibleAnswers;
     }
 
