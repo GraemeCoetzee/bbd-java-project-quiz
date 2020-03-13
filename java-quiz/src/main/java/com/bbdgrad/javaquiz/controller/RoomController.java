@@ -9,7 +9,9 @@ import com.bbdgrad.javaquiz.model.Session;
 import com.bbdgrad.javaquiz.model.Answer;
 import com.bbdgrad.javaquiz.model.Question;
 import com.bbdgrad.javaquiz.model.Quiz;
+import com.bbdgrad.javaquiz.model.Results;
 import com.bbdgrad.javaquiz.model.Room;
+import com.bbdgrad.javaquiz.model.Score;
 
 @Controller
 public class RoomController {
@@ -68,24 +70,7 @@ public class RoomController {
   @MessageMapping("/quiz/quizbegin/{room}")
   @SendTo("/topic/quiz/quizbegin/{room}")
   public Quiz returnQuiz(Room r) {
-
-    System.out.println(r.getRoomID());
-
     Quiz newQuiz = new Quiz();
-    newQuiz.setRoomID(r.getRoomID());
-
-    String[] questions = {"what?","where", "why"};
-    newQuiz.setQuestions(questions);
-
-    newQuiz.setNumberOfQuestions(3);
-
-    String[][] answers = {{"this"},{"there"},{"because"}};
-    newQuiz.setAnswers(answers);
-
-    String[][] wrong = {{"donno1", "donno2", "donno3"}, {"donno1", "donno2", "donno3"}, {"donno1", "donno2", "donno3"}};
-    newQuiz.setWrongAnswers(wrong);
-
-    newQuiz.setRoomID(r.getRoomID());
     return newQuiz;
   }
 
@@ -101,9 +86,36 @@ public class RoomController {
     return ans;
   }
 
+  @MessageMapping("/quiz/updatescore/{room}")
+  public void updateScore(Score score) {
+    sessions.forEach( session -> {
+      if(session.getSessionID().equals(score.getUser())){
+        session.setScore(session.getScore() + score.getPointsGained());
+      }
+    });
+  }
+
   @MessageMapping("/quiz/score/{room}")
   @SendTo("/topic/quiz/score/{room}")
   public List<Session> updateScore(Session session) {
     return sessions;
+  }
+
+  @MessageMapping("/quiz/questionroundsessions/{room}")
+  @SendTo("/topic/quiz/questionroundsessions/{room}")
+  public List<Session> getScores(Room room) {
+    List<Session> scores = new ArrayList<Session>();
+    for(int i = 0; i < sessions.size(); i++) {
+      if(!sessions.get(i).getHost() && sessions.get(i).getRoomID().equals(room.getRoomID())) {
+        scores.add(sessions.get(i));
+      }
+    }
+    return scores;
+  }
+
+  @MessageMapping("/quiz/sendscoreresult/{room}")
+  @SendTo("/topic/quiz/sendscoreresult/{room}")
+  public Results getScores(Results result) {
+    return result;
   }
 }

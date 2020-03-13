@@ -9,6 +9,7 @@
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/js/quizConfig.js"></script>
 </head>
 
 <body>
@@ -30,9 +31,8 @@
         <div class="container mt-5">
             <div class="row">
                 <div class="col-6 mx-auto center">
-                    <input class="form-control" required type="number" id="quantity" placeholder="Number of questions"
-                        name="Number of questions" min="1" max="50">
-                    <select name="trivia_category" class="form-control">
+                    <input Class="form-control" required type="number" id="quantity" placeholder="Number of questions" name="Number of questions" min="1" value="1" max="50">
+                    <select id="trivia_category" class="form-control">
                         <option value="any">Any Category</option>
                         <option value="9">General Knowledge</option>
                         <option value="10">Entertainment: Books</option>
@@ -59,23 +59,23 @@
                         <option value="31">Entertainment: Japanese Anime &amp; Manga</option>
                         <option value="32">Entertainment: Cartoon &amp; Animations</option>
                     </select>
-                    <select name="trivia_difficulty" class="form-control">
+                    <select id="trivia_difficulty" class="form-control">
                         <option value="any">Any Difficulty</option>
                         <option value="easy">Easy</option>
                         <option value="medium">Medium</option>
                         <option value="hard">Hard</option>
                     </select>
-                    <select name="trivia_type" class="form-control">
+                    <select id="trivia_type" class="form-control">
                         <option value="any">Any Type</option>
                         <option value="multiple">Multiple Choice</option>
-                        <option value="boolean">True / False</option>
+                        <option value="boolean">True / False</option></select>
                     </select>
                 </div>
             </div>
             <div class="row mt-3">
                 <div class="col-6 mx-auto center">
                     <a href="/multiplayer/host" class="btn btn-primary btn-lg active" role="button"
-                        aria-pressed="true">Create Session</a>
+                        aria-pressed="true" id="get_questions">Create Session</a>
                 </div>
             </div>
         </div>

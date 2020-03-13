@@ -3,6 +3,8 @@ var interval = null;
 let rID = null;
 let sID = null;
 let quiz = null;
+let timeTaken  = 0;
+let currentCorrectAnswer = '';
 
 let answers = [];
 
@@ -18,12 +20,34 @@ function connect(roomID) {
             showGreeting(JSON.parse(sessions.body));
         });
 
-        stompClient.subscribe(`/topic/quiz/quizbegin/${roomID}`, function (response) {
-            handleStartQuizRepsonse(JSON.parse(response.body));
-        });
-
         stompClient.subscribe(`/topic/quiz/answers/${roomID}`, function (response) {
             handleAnsweredQuestionResponse(JSON.parse(response.body));
+        });
+
+        stompClient.subscribe(`/topic/quiz/questionroundsessions/${roomID}`, function (response) {
+            handleQuestionRoundSessions(JSON.parse(response.body));
+        });
+
+        
+        stompClient.subscribe('/topic/questions-response', function (response) {
+            let result = JSON.parse(response.body);
+            let question = [];
+            let correctAnswer = [];
+            let wrongAnswer = [];
+
+            result.results.forEach((ques, i) => {
+                question.push(ques.question);
+                correctAnswer.push([ques.correct_answer]);
+                wrongAnswer.push(ques.incorrect_answers);
+            });
+
+            quiz = {
+                numberOfQuestions: 0,
+                questions: question,
+                correctAnswers: correctAnswer,
+                wrongAnswers: wrongAnswer,
+                roomID: rID
+            }
         });
 
         rID = roomID;
@@ -38,6 +62,8 @@ function connect(roomID) {
         })
         sendName(roomID, room);
         startPolling(roomID, socketId);
+    }, function(message) {
+        window.location.replace("http://localhost:8080/multiplayer/quizSetup");
     });
 }
 
@@ -58,11 +84,15 @@ function handleAnswer(answer) {
 
 
 function startQuiz() {
-
+    if(quiz == null) {
+        alert("Enter quiz details");
+        window.location.replace("http://localhost:8080/multiplayer/quizSetup");
+    }
     let room = JSON.stringify({
         roomID: rID
     });
 
+    begin(quiz);
     stompClient.send(`/app/quiz/quizbegin/${rID}`, {}, room);
 }
 
@@ -95,38 +125,107 @@ function showGreeting(message) {
     });
 }
 
-function handleStartQuizRepsonse(message) {
-    begin(message);
+function handleStartQuizRepsonse() {
+    begin(quiz);
+}
+
+function timer() {
+    for(var k = 0; k < 40; k++) {
+        function timer(i) {
+            setTimeout(() => {
+                timeTaken = i -15;
+            }, i * 1000);
+        }
+        timer(k);
+    }
+}
+
+function initAnswers() {
+    ansers = [];
+    // answers.push({
+    //     user: '',
+    //     points: 0,
+    //     correct: false
+    // });
+}
+
+//  send results
+
+function gatherResults() {
+    let room = JSON.stringify({
+        roomID: rID    
+    });
+
+    setTimeout(() => {
+        stompClient.send(`/app/quiz/questionroundsessions/${rID}`, {}, room);
+    },30000);
+}
+
+function handleQuestionRoundSessions(sessions) {
+    let result = JSON.stringify({
+        sessions: sessions,
+        answers: answers
+    });
+
+    stompClient.send(`/app/quiz/sendscoreresult/${rID}`, {}, result);
+  
 }
 
 function begin(quiz) {
     for(var j = 0; j < quiz.questions.length; j++) {
-        answers = [];
         function send(i) {
             setTimeout(() => {
+                timer();
+                gatherResults();
+                initAnswers();
+                answers = [];
+                currentCorrectAnswer = quiz.correctAnswers[i];
+
                 let question = JSON.stringify({
                     question: quiz.questions[i],
                     possibleAnswers: quiz.correctAnswers[i].concat(quiz.wrongAnswers[i])
                 });
                 stompClient.send(`/app/quiz/questions/${rID}`, {}, question);
             }, i * 40000);
-            console.log("--------------------------------------" + answers);
         }
-        send(j);
-        
+        send(j); 
     }
 }
 
-function sendQuestion() {
+function updateScore(user, points) {
+    let score = JSON.stringify({
+        user: user,
+        score: 0,
+        pointsGained: points
+    });
 
-}
-
-function updateScore() {
-
+    stompClient.send(`/app/quiz/updatescore/${rID}`, {}, score);
 }
 
 function handleAnsweredQuestionResponse(answer) {
-    answers.push(answer);
+    let points = 0;
+    let correct  = false;
+
+    if(answer.answer == currentCorrectAnswer) {
+        points = (15 - timeTaken) * 73;
+        correct = true;
+    }
+
+    answers.push({
+        user: answer.user,
+        points: points,
+        correct: correct
+    });
+
+    updateScore(answer.user, points);
+}
+
+function handleResultsRequest() {
+
+}
+
+function sendResults() {
+
 }
 
 $(function () {

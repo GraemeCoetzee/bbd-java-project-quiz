@@ -1,8 +1,9 @@
 var stompClient = null;
 var sID = null;
 var rID = null;
+let score = 0;
 
-
+let questionResult = null;
 
 $( document ).ready(function() {
     $("#question").hide();
@@ -11,15 +12,22 @@ $( document ).ready(function() {
     $("#loader").hide();
     $("#timer").hide();
     $(".timer-description").hide();
+    $("#questionResults").hide();
 });
 
 function join() {
+
     let roomID = $("#roomID").val();
-    connect(roomID);
+
+    if(typeof roomID !== 'number') {
+        alert("Room does not exist");
+    }
+    else {
+        connect(roomID);
+    }
 }
 
 function connect(roomID) {
-
     rID =  roomID;
     var socket = new SockJS('/gs-guide-websocket');
     stompClient = Stomp.over(socket);
@@ -27,6 +35,8 @@ function connect(roomID) {
         let socketId = /\/([^\/]+)\/websocket/.exec(socket._transport.url)[1];
 
         sID = socketId;
+
+        $("#user").html("User: " + sID);
 
         stompClient.subscribe(`/topic/quiz/${roomID}`, function (response) {
             handleResponse(JSON.parse(response.body));
@@ -40,12 +50,17 @@ function connect(roomID) {
             handleQuestion(JSON.parse(response.body));
         });
 
+        stompClient.subscribe(`/topic/quiz/sendscoreresult/${roomID}`, function (response) {
+            handleResult(JSON.parse(response.body));
+        });
+
         sendName(roomID, JSON.stringify({
             roomID: roomID,
             mode: 'multiplayer',
             host: false,
             join: true,
-            sessionID: socketId
+            sessionID: socketId,
+            score: 0
         }));
     }, function(message) {
         alert(message);
@@ -55,8 +70,14 @@ function connect(roomID) {
 
 function handleResponse(response) {
     if(response.length == 1 && response[0].join == false) {
-        alert('room does not exist');
+        $("#user").hide();
+        $("#waiting").hide();
+        $("#loader").hide();
+       
+        
         disconnect();
+
+        alert('room does not exist');
     } else {
         $("#joinForm").hide();
         $("#waiting").show();
@@ -68,11 +89,12 @@ function handleStartQuizRepsonse() {
 }
 
 function handleQuestion(question) {
+    //show question
     $("#loader").hide();
     setTimeout(()=> {
         $("#question").show();
         $("#timer").show();
-
+        $("#questionResults").hide();
         $("#description").html("Think About It!");
         $(".timer-description").show();
         $("#questionSpace").html(question.question);
@@ -87,6 +109,7 @@ function handleQuestion(question) {
         updateBar(j);
     }
 
+    // show possible answers
     setTimeout( () => {
         $("#description").html("Answer!");
         $(".progress-bar").attr("style", "width: " + 0 + "%");
@@ -111,12 +134,65 @@ function handleQuestion(question) {
 
     }, 15000);
 
-    
+    //show results
 
     setTimeout(()=> {
-        $("#results").show();
+        $("#questionResults").show();
+
+        let answered = false;
+        let answerDescription = "";
+        let points = 0;
+
+        for(let i = 0; i < questionResult.answers.length; i++) {
+            if(questionResult.answers[i].user == sID) {
+                answered = true;
+                answerDescription = questionResult.answers[i].correct;
+                points = questionResult.answers[i].points;
+                break;
+            }
+        }
+
+        if(answered) {
+            if(answerDescription) {
+                $("#resultDescription").html("Correct!");
+            }
+            else {
+                $("#resultDescription").html("Wrong!");
+            }
+        }
+        else {
+            $("#resultDescription").html("Did not answer!");
+        }
+
+        $("#numPoints").html(points + " points");
+
+        for(let i = 0; i < questionResult.sessions.length; i++) {
+            if(questionResult.sessions[i].sessionID == sID) {
+               score = questionResult.sessions[i].score;
+            }
+        }
+
+        questionResult.sessions.sort(function(a, b) {
+            return  b.score - a.score;
+        });
+        
+        $(".panel-leaderBoard").html("");
+
+        for(let i = 0; i < questionResult.sessions.length; i++) {
+            if(i == 3) {
+                break;
+            }
+
+            $(".panel-leaderBoard").append(`<div class="panel-body leaderBoard rounded mt-3 shadow">${questionResult.sessions[i].sessionID} : ${questionResult.sessions[i].score}</div>`);
+        }
+
+        $("#score").html("Score:" + score);
+
         $("#possibleAnswers").hide();
-    }, 30000);
+        $("#description").html("");
+        $("#timer").hide();
+        $("#question").hide();
+    }, 31000);
 
     setTimeout(()=> {
         $("#question").hide();
@@ -126,6 +202,11 @@ function handleQuestion(question) {
 
 }
 
+function handleResult(result) {
+    console.log(result);
+    questionResult = result;
+}
+
 function answerQuestion(answer, i) {
     let quizAnswer = JSON.stringify({
         answer: answer,
@@ -133,6 +214,13 @@ function answerQuestion(answer, i) {
     });
 
     stompClient.send(`/app/quiz/answers/${rID}`, {}, quizAnswer);
+
+    $(`#${i}`).attr("class", "active col-6 center card answerChoice");
+    $('.answerChoice').attr("onclick","");
+}
+
+function getResults(results) {
+
 }
 
 function disconnect() {
