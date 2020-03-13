@@ -91,7 +91,7 @@ function startQuiz() {
         alert("Enter quiz details");
         window.location.replace("http://localhost:8080/multiplayer/quizSetup");
     }
-    
+
     let room = JSON.stringify({
         roomID: rID
     });
@@ -114,7 +114,8 @@ function startPolling(roomID) {
         mode: 'multiplayer',
         host: true,
         join: false,
-        sessionID: 0
+        sessionID: 0,
+        user: "host"
     })
 
 
@@ -132,7 +133,7 @@ function showGreeting(message) {
     console.log(message);
     message.forEach(element => {
         if(!element.host)
-        $("#players").append("<div class='card col-md-4'><div class='card-body'>" + element.sessionID + "</div></div>");
+        $("#players").append("<div class='card col-md-4'><div class='card-body'>" + element.user + "</div></div>");
     });
 }
 
@@ -180,7 +181,7 @@ function handleQuestionRoundSessions(sessions) {
     let questionResult = JSON.parse(result);
 
     for(let i = 0; i < questionResult.sessions.length; i++) {
-        $(".panel-leaderBoard").append(`<div class="panel-body leaderBoard rounded mt-3 shadow">${questionResult.sessions[i].sessionID} : ${questionResult.sessions[i].score}</div>`);
+        $(".panel-leaderBoard").append(`<div class="panel-body leaderBoard rounded mt-3 shadow">${questionResult.sessions[i].user} : ${questionResult.sessions[i].score}</div>`);
     }
   
 }
@@ -228,12 +229,14 @@ function handleAnsweredQuestionResponse(answer) {
     if(answer.answer == currentCorrectAnswer) {
         points = (15 - timeTaken) * 73;
         correct = true;
+        
     }
 
     answers.push({
         user: answer.user,
         points: points,
-        correct: correct
+        correct: correct,
+        correctAnswer: currentCorrectAnswer[0]
     });
 
     updateScore(answer.user, points);

@@ -8,11 +8,13 @@ public class AnswerResult {
     private String user;
     private int points;
     private Boolean correct;
+    private String correctAnswer;
 
-    public AnswerResult(String user, int points, Boolean correct) {
+    public AnswerResult(String user, int points, Boolean correct, String correctAnswer) {
         this.user = user;
         this.points = points;
         this.correct = correct;
+        this.correctAnswer = correctAnswer;
     }
 
     public String getUser() {
@@ -27,6 +29,10 @@ public class AnswerResult {
         return this.correct;
     }
 
+    public String getCorrectAnswer() {
+        return this.correctAnswer;
+    }
+
     public void setUser(String user) {
         this.user = user;
     }
@@ -37,5 +43,9 @@ public class AnswerResult {
 
     public void setCorrect(Boolean correct) {
         this.correct = correct;
+    }
+
+    public void setCorrectAnswer(String correctAnswer) {
+        this.correctAnswer = correctAnswer;
     }
 }

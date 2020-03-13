@@ -39,7 +39,9 @@ function connect(roomID) {
 
         $("#leave").show();
 
-        $("#user").html("User: " + sID);
+        let username = $("#username").val();
+
+        $("#user").html("User: " + username);
 
         stompClient.subscribe(`/topic/quiz/${roomID}`, function (response) {
             handleResponse(JSON.parse(response.body));
@@ -67,7 +69,8 @@ function connect(roomID) {
             host: false,
             join: true,
             sessionID: socketId,
-            score: 0
+            score: 0,
+            user: username
         }));
     }, function (message) {
         window.location.replace("http://localhost:8080/multiplayer");
@@ -165,12 +168,14 @@ function handleQuestion(question) {
         let answered = false;
         let answerDescription = "";
         let points = 0;
+        let correctAnswer = ""
 
         for (let i = 0; i < questionResult.answers.length; i++) {
             if (questionResult.answers[i].user == sID) {
                 answered = true;
                 answerDescription = questionResult.answers[i].correct;
                 points = questionResult.answers[i].points;
+                correctAnswer = questionResult.answers[i].correctAnswer;
                 break;
             }
         }
@@ -180,7 +185,7 @@ function handleQuestion(question) {
                 $("#resultDescription").html("Correct!");
             }
             else {
-                $("#resultDescription").html("Wrong!");
+                $("#resultDescription").html("Wrong! \n The correct answer is " + correctAnswer);
             }
         }
         else {
@@ -207,7 +212,7 @@ function handleQuestion(question) {
                 break;
             }
 
-            $(".panel-leaderBoard").append(`<div class="panel-body leaderBoard rounded mt-3 shadow">${questionResult.sessions[i].sessionID} : ${questionResult.sessions[i].score}</div>`);
+            $(".panel-leaderBoard").append(`<div class="panel-body leaderBoard rounded mt-3 shadow">${questionResult.sessions[i].user} : ${questionResult.sessions[i].score}</div>`);
         }
 
         $("#score").html("Score:" + score);
