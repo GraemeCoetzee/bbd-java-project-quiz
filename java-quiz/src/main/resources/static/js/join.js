@@ -5,7 +5,7 @@ let score = 0;
 
 let questionResult = null;
 
-$( document ).ready(function() {
+$(document).ready(function () {
     $("#question").hide();
     $("#possibleAnswers").hide();
     $("#results").hide();
@@ -13,13 +13,14 @@ $( document ).ready(function() {
     $("#timer").hide();
     $(".timer-description").hide();
     $("#questionResults").hide();
+    $("#leave").hide();
 });
 
 function join() {
 
     let roomID = $("#roomID").val();
 
-    if(typeof roomID !== 'number') {
+    if (roomID == "") {
         alert("Room does not exist");
     }
     else {
@@ -28,13 +29,15 @@ function join() {
 }
 
 function connect(roomID) {
-    rID =  roomID;
+    rID = roomID;
     var socket = new SockJS('/gs-guide-websocket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         let socketId = /\/([^\/]+)\/websocket/.exec(socket._transport.url)[1];
 
         sID = socketId;
+
+        $("#leave").show();
 
         $("#user").html("User: " + sID);
 
@@ -54,6 +57,10 @@ function connect(roomID) {
             handleResult(JSON.parse(response.body));
         });
 
+        stompClient.subscribe(`/topic/quiz/done/${roomID}`, function () {
+            done();
+        });
+
         sendName(roomID, JSON.stringify({
             roomID: roomID,
             mode: 'multiplayer',
@@ -62,19 +69,18 @@ function connect(roomID) {
             sessionID: socketId,
             score: 0
         }));
-    }, function(message) {
-        alert(message);
+    }, function (message) {
         window.location.replace("http://localhost:8080/multiplayer");
     });
 }
 
 function handleResponse(response) {
-    if(response.length == 1 && response[0].join == false) {
+    if (response.length == 1 && response[0].join == false) {
         $("#user").hide();
         $("#waiting").hide();
         $("#loader").hide();
-       
-        
+
+
         disconnect();
 
         alert('room does not exist');
@@ -88,10 +94,23 @@ function handleStartQuizRepsonse() {
     $("#loader").hide();
 }
 
+function shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+    while (0 !== currentIndex) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+}
+
 function handleQuestion(question) {
     //show question
     $("#loader").hide();
-    setTimeout(()=> {
+    setTimeout(() => {
         $("#question").show();
         $("#timer").show();
         $("#questionResults").hide();
@@ -100,35 +119,39 @@ function handleQuestion(question) {
         $("#questionSpace").html(question.question);
     }, 1000);
 
-    for(var j = 0; j < 14; j++) {
+    for (var j = 0; j < 14; j++) {
         function updateBar(i) {
             setTimeout(() => {
-                $(".progress-bar").attr("style", "width: " + (100/13)*i + "%");
+                $(".progress-bar").attr("style", "width: " + (100 / 13) * i + "%");
             }, i * 1000);
         }
         updateBar(j);
     }
 
     // show possible answers
-    setTimeout( () => {
+    setTimeout(() => {
         $("#description").html("Answer!");
         $(".progress-bar").attr("style", "width: " + 0 + "%");
-        for(var j = 0; j < 15; j++) {
+        for (var j = 0; j < 15; j++) {
             function updateBar(i) {
                 setTimeout(() => {
-                    $(".progress-bar").attr("style", "width: " + (100/14)*i + "%");
+                    $(".progress-bar").attr("style", "width: " + (100 / 14) * i + "%");
                 }, i * 1000);
             }
             updateBar(j);
         }
     }, 15000);
-    
 
-    setTimeout(()=> {
+
+    setTimeout(() => {
         $("#possibleAnswers").show();
         $(".answerSpace").html("");
 
-        question.possibleAnswers.forEach((element, i) => {
+        let poss = question.possibleAnswers;
+
+        poss = shuffle(poss);
+
+        poss.forEach((element, i) => {
             $(".answerSpace").append(`<div id='${i}' class='col-6 center card answerChoice' onclick="answerQuestion('${element}', ${i})"><div class='my-auto'>${element}</div></div>`);
         });
 
@@ -136,15 +159,15 @@ function handleQuestion(question) {
 
     //show results
 
-    setTimeout(()=> {
+    setTimeout(() => {
         $("#questionResults").show();
 
         let answered = false;
         let answerDescription = "";
         let points = 0;
 
-        for(let i = 0; i < questionResult.answers.length; i++) {
-            if(questionResult.answers[i].user == sID) {
+        for (let i = 0; i < questionResult.answers.length; i++) {
+            if (questionResult.answers[i].user == sID) {
                 answered = true;
                 answerDescription = questionResult.answers[i].correct;
                 points = questionResult.answers[i].points;
@@ -152,8 +175,8 @@ function handleQuestion(question) {
             }
         }
 
-        if(answered) {
-            if(answerDescription) {
+        if (answered) {
+            if (answerDescription) {
                 $("#resultDescription").html("Correct!");
             }
             else {
@@ -164,22 +187,23 @@ function handleQuestion(question) {
             $("#resultDescription").html("Did not answer!");
         }
 
+        $("#numPoints").show();
         $("#numPoints").html(points + " points");
 
-        for(let i = 0; i < questionResult.sessions.length; i++) {
-            if(questionResult.sessions[i].sessionID == sID) {
-               score = questionResult.sessions[i].score;
+        for (let i = 0; i < questionResult.sessions.length; i++) {
+            if (questionResult.sessions[i].sessionID == sID) {
+                score = questionResult.sessions[i].score;
             }
         }
 
-        questionResult.sessions.sort(function(a, b) {
-            return  b.score - a.score;
+        questionResult.sessions.sort(function (a, b) {
+            return b.score - a.score;
         });
-        
+
         $(".panel-leaderBoard").html("");
 
-        for(let i = 0; i < questionResult.sessions.length; i++) {
-            if(i == 3) {
+        for (let i = 0; i < questionResult.sessions.length; i++) {
+            if (i == 3) {
                 break;
             }
 
@@ -194,12 +218,37 @@ function handleQuestion(question) {
         $("#question").hide();
     }, 31000);
 
-    setTimeout(()=> {
+    setTimeout(() => {
         $("#question").hide();
         $("#possibleAnswers").hide();
         $("#results").hide();
     }, 40000);
 
+}
+
+function leave() {
+    window.location.replace("http://localhost:8080/multiplayer");
+}
+
+function done() {
+    $("#question").hide();
+    $("#timer").hide();
+    $("#questionResults").show();
+    $("#questionResult").hide();
+    $(".timer-description").show();
+    $("#questionSpace").hide(question.question);
+
+    for (let i = 0; i < questionResult.sessions.length; i++) {
+        if (questionResult.sessions[i].sessionID == sID) {
+            score = questionResult.sessions[i].score;
+        }
+    }
+
+    $("#numPoints").hide();
+    $("#description").show();
+    $("#description").html("Final Score: " + score);
+
+    $("#score").html("Score:" + score);
 }
 
 function handleResult(result) {
@@ -216,7 +265,7 @@ function answerQuestion(answer, i) {
     stompClient.send(`/app/quiz/answers/${rID}`, {}, quizAnswer);
 
     $(`#${i}`).attr("class", "active col-6 center card answerChoice");
-    $('.answerChoice').attr("onclick","");
+    $('.answerChoice').attr("onclick", "");
 }
 
 function getResults(results) {
@@ -235,5 +284,5 @@ function sendName(roomID, message) {
 }
 
 $(function () {
-    $( "#send" ).click(function() { sendName(roomID); });
+    $("#send").click(function () { sendName(roomID); });
 });

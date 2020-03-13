@@ -118,4 +118,10 @@ public class RoomController {
   public Results getScores(Results result) {
     return result;
   }
+
+  @MessageMapping("/quiz/done/{room}")
+  @SendTo("/topic/quiz/done/{room}")
+  public int done() {
+    return 0;
+  }
 }

@@ -10,6 +10,9 @@ let answers = [];
 
 function connect(roomID) {
     let socket = new SockJS('/gs-guide-websocket');
+
+    $("#leave").hide();
+
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         let socketId = /\/([^\/]+)\/websocket/.exec(socket._transport.url)[1];
@@ -88,12 +91,20 @@ function startQuiz() {
         alert("Enter quiz details");
         window.location.replace("http://localhost:8080/multiplayer/quizSetup");
     }
+    
     let room = JSON.stringify({
         roomID: rID
     });
 
     begin(quiz);
     stompClient.send(`/app/quiz/quizbegin/${rID}`, {}, room);
+
+    $("#start").hide();
+    $("#leave").show();
+}
+
+function leave() {
+    window.location.replace("http://localhost:8080/multiplayer/quizSetup");
 }
 
 function startPolling(roomID) {
@@ -142,11 +153,6 @@ function timer() {
 
 function initAnswers() {
     ansers = [];
-    // answers.push({
-    //     user: '',
-    //     points: 0,
-    //     correct: false
-    // });
 }
 
 //  send results
@@ -168,6 +174,14 @@ function handleQuestionRoundSessions(sessions) {
     });
 
     stompClient.send(`/app/quiz/sendscoreresult/${rID}`, {}, result);
+
+    $(".panel-leaderBoard").html("");
+
+    let questionResult = JSON.parse(result);
+
+    for(let i = 0; i < questionResult.sessions.length; i++) {
+        $(".panel-leaderBoard").append(`<div class="panel-body leaderBoard rounded mt-3 shadow">${questionResult.sessions[i].sessionID} : ${questionResult.sessions[i].score}</div>`);
+    }
   
 }
 
@@ -178,6 +192,11 @@ function begin(quiz) {
                 timer();
                 gatherResults();
                 initAnswers();
+
+                if(i == quiz.questions.length -1) {
+                    done(); 
+                }
+
                 answers = [];
                 currentCorrectAnswer = quiz.correctAnswers[i];
 
@@ -220,12 +239,10 @@ function handleAnsweredQuestionResponse(answer) {
     updateScore(answer.user, points);
 }
 
-function handleResultsRequest() {
-
-}
-
-function sendResults() {
-
+function done() {
+    setTimeout(() => {
+        stompClient.send(`/app/quiz/done/${rID}`, {});
+    },40000);
 }
 
 $(function () {

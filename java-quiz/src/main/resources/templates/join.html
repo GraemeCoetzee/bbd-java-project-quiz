@@ -13,7 +13,6 @@
 </head>
 
 <body>
-    <!-- <button onclick="startQuiz()">start</button> -->
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
@@ -28,7 +27,6 @@
                 </div>
             </div>
 
-            <!-- //new -->
             <div class="col-12 mt-3 text-light" >
                 <div id="user">
                    
@@ -41,13 +39,11 @@
                 </div>
             </div>
 
-            <!-- end new -->
-
             <div class="col-12 text-light game-pin mt-1">
                 <div class="row">
                     <div class="col-auto mx-auto">
                         <div id="joinForm">
-                            <input class="form-control" placeholder="Game Pin" id="roomID">
+                            <input class="form-control" type="number" placeholder="Game Pin" id="roomID">
                             <button class="form-control" onclick="join()">Join</button>
                         </div>
                     </div>
@@ -63,19 +59,19 @@
                 </div>
             </div>
 
+            <div class="col-12 text-light mt-3">
+                <div class="row" >
+                    <div class="col-auto">
+                        <button class="btn form-control btn-light" id="leave" onclick="leave()">Leave</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-12 mt-1 timer-description">
                 <div class="center" id="description">
                     Think About It!!
                 </div>
             </div>
-
-
-
-
-
-
-            <!-- new -->
-
 
             <div class="col-12 mt-1 text-light" id="questionResults">
                 <div class="center">
@@ -94,7 +90,7 @@
 
                         <div class="col-12 mt-5">
                             <div class="mx-auto border-top pt-5">
-                                Leader Board
+                                Leaderboard
 
                                 <div class="panel panel-default panel-leaderBoard bg-light text-light rounded mt-3">
                                     
@@ -105,13 +101,6 @@
                 </div>
             </div>
 
-
-
-
-
-            <!-- end new -->
-
-
             <div class="col-12 mt-1" id="timer">
                 <div class="progress">
                     <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0"
@@ -120,7 +109,6 @@
                     </div>
                 </div>
             </div>
-
 
             <div class="col-12 mt-5 center mb-4" id="question">
                 <div class="container-fluid content center shadow-lg rounded">
@@ -132,7 +120,7 @@
 
             <div class="col-12 center answers" id="possibleAnswers">
                 <div class="row center answerSpace">
-                    dd
+                    
                 </div>
             </div>
 

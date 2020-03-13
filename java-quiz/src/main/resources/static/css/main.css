@@ -153,11 +153,11 @@ html {
     height: 100%;
 }
 
-.active {
+.answerSpace > .active {
     background: rgba(0, 128, 128, 0.6);
 }
 
-.active:hover {
+.answerSpace >.active:hover {
     background: rgba(0, 128, 128, 0.6) !important;
 }
 
@@ -188,4 +188,19 @@ html {
 
 #questionResult {
     font-size: 50px;
+}
+
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:visited,
+.btn-primary:focus {
+    background-color: rgb(6, 148, 148) !important;
+    border-color: rgb(6, 148, 148) !important;
+    width: 15rem;
+}
+
+.carousel-inner img {
+    height: 400px;
+    margin: auto;
 }
